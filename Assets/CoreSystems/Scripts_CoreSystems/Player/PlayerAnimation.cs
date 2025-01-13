@@ -13,18 +13,22 @@ public class PlayerAnimation : MonoBehaviour
     public bool IsIdle {  get; private set; }
     public bool IsLeft { get; private set; }
     public bool IsRight { get; private set; }
-    public bool IsUp { get; private set; }
-    public bool IsDown { get; private set; }
+    public bool IsFront { get; private set; }
+    public bool IsBack { get; private set; }
+    public bool IsCrouchi { get; private set; }
+    public bool IsJump { get; private set; }
 
-    //Sitdown, Jump, Die, front, Back
     public void InputAnimationValue()
     {
         // 애니메이터의 파라미터 업데이트
         animator.SetBool("IsIdle", IsIdle);
         animator.SetBool("IsMovingLeft", IsLeft);
         animator.SetBool("IsMovingRight", IsRight);
-        animator.SetBool("IsMovingUp", IsUp);
-        animator.SetBool("IsMovingDown", IsDown);
+        animator.SetBool("IsMovingFront", IsFront);
+        animator.SetBool("IsMovingBack", IsBack);
+
+        animator.SetBool("IsCrouchi", IsCrouchi);
+        animator.SetBool("IsJump", IsJump);
     }
     public void SetAnimation(PlayerInput _playerInput)
     {
@@ -33,11 +37,14 @@ public class PlayerAnimation : MonoBehaviour
             Debug.LogWarning("Erro: Not PlayerInput");
         }
 
-        IsIdle = !_playerInput.IsMovingLeft && !_playerInput.IsMovingRight && !_playerInput.IsMovingUp && !_playerInput.IsMovingDown;
+        /*IsIdle = !_playerInput.IsMovingLeft && !_playerInput.IsMovingRight && !_playerInput.IsMovingFront && !_playerInput.IsMovingBack;
         IsLeft = _playerInput.IsMovingLeft;
         IsRight = _playerInput.IsMovingRight;
-        IsUp = _playerInput.IsMovingUp;
-        IsDown = _playerInput.IsMovingDown;
+        IsFront = _playerInput.IsMovingFront;
+        IsBack = _playerInput.IsMovingBack;*/
+
+        IsCrouchi = _playerInput.IsCKey;
+        IsJump = _playerInput.IsSpace;
 
         InputAnimationValue();
     }
