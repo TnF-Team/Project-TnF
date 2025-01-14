@@ -54,6 +54,40 @@ public class TPSCharacterController : MonoBehaviour
     /// </summary>
     void Move()
     {
-        Debug.DrawRay(cameraArm.position, cameraArm.forward, Color.red );
+        //카메라 정면이 향하는방향으로 레이가 뻗어지는데 이러면 위나 아래로 기울어짐, 플레이어의 이동을위해 Y축값이 없는 X축 rotation값만 추출할것.
+        //Debug.DrawRay(cameraArm.position, cameraArm.forward, Color.red );
+
+        //y값을 제거해서 높이가없이 x rotate방향으로만 뻗어나가는 ray, normalized == 길이를 1로 맞춰주는기능
+        // Debug.DrawRay(cameraArm.position, new Vector3(cameraArm.forward.x, 0, cameraArm.forward.z).normalized, Color.red);
+
+        Vector2 moveInput = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical")).normalized;
+
+        // moveInput의길이가 0이면 입력이 발생하지않고(0, false)있는것이고, 그렇지않다면 입력이 발생중이므로 1(true) 
+        bool ismove = moveInput.magnitude != 0;
+        animator.SetBool("IsMove", ismove);
+
+        if (ismove)
+        {
+            Vector3 lookForward = new Vector3 (cameraArm.forward.x, 0f, cameraArm.forward.z).normalized;
+            Vector3 lookRight = new Vector3(cameraArm.right.x,0f, cameraArm.right.z).normalized;
+            Vector3 moveDir = lookForward * moveInput.y + lookRight * moveInput.x;
+
+            //캐릭터가 바라보는 방향 결정하는방법1. 캐릭터를 이동시킬때 시선을 정면으로 고정시킨다.
+            //body.Forward = lookForward 해주면됨
+            //이렇게하면 캐릭터는항상 정면을보기때문에 뒷걸음, 좌우걸음 애니메이션을 추가해줘야한다.
+            body.forward = lookForward;
+            
+            //2번방향캐릭터는 입력한 키의 방향으로 움직인다
+            //캐릭터가 항상 이동해야하는방향만 바라보기때문에 좀 직관적이지않지만 섬세한 컨트롤이 가능해진다.
+            //body.forward = moveDir;
+
+            transform.position += moveDir * Time.deltaTime * 5f;
+        }
+
+    }
+
+    void DrwaPlayerRay()
+    {
+
     }
 }
